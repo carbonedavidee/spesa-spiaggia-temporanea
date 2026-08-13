@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ff6b35">
+  <title>Spesa per la spiaggia</title>
+  <style>
+    :root{--ink:#17212b;--muted:#64707d;--paper:#fffaf2;--card:#fff;--line:#e8ded0;--accent:#ff6b35;--accent2:#0f8b8d;--ok:#14805e;--danger:#c93c37;--shadow:0 12px 35px rgba(69,46,28,.1)}
+    *{box-sizing:border-box} body{margin:0;color:var(--ink);font:16px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 15% 0,#ffe2b8 0,transparent 30rem),linear-gradient(180deg,#fffaf2,#f7f1e8);min-height:100vh}
+    button,input,select{font:inherit} button{cursor:pointer}.hidden{display:none!important}
+    .shell{width:min(960px,100%);margin:auto;padding:24px 16px 90px}.hero{padding:24px 4px 16px}.eyebrow{color:var(--accent);font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:.78rem}.hero h1{font-size:clamp(2rem,8vw,4.5rem);line-height:.95;margin:.4rem 0 1rem;letter-spacing:-.055em;max-width:750px}.hero p{color:var(--muted);max-width:650px;font-size:1.05rem}
+    .panel,.category{background:rgba(255,255,255,.91);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow)}.panel{padding:22px}.access{max-width:480px;margin:8vh auto}.access h2{margin-top:0}.stack{display:grid;gap:12px}.field{display:grid;gap:6px}.field label{font-weight:700;font-size:.88rem}.field input,.field select{width:100%;border:1px solid #d7c9b8;border-radius:12px;padding:12px;background:#fff;color:var(--ink)}
+    .primary,.secondary,.ghost,.danger{border:0;border-radius:12px;padding:11px 15px;font-weight:800}.primary{background:var(--accent);color:#fff}.secondary{background:var(--accent2);color:#fff}.ghost{background:#f3ede5;color:var(--ink)}.danger{background:#ffe4e1;color:var(--danger)}button:disabled{opacity:.5;cursor:not-allowed}
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:12px 0 24px}.status{margin-left:auto;color:var(--muted);font-size:.9rem}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0 24px}.metric{padding:16px;background:#18232d;color:white;border-radius:18px}.metric span{display:block;color:#b9c5cf;font-size:.8rem}.metric strong{font-size:1.65rem}
+    .category{overflow:hidden;margin:0 0 16px}.category-head{display:flex;justify-content:space-between;align-items:center;padding:18px 18px 12px}.category-head h2{margin:0;font-size:1.25rem}.items{display:grid}.item{padding:16px 18px;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}.item h3{font-size:1rem;margin:0 0 3px}.target{font-size:.88rem;color:var(--muted)}.progress{height:8px;background:#eee7de;border-radius:20px;overflow:hidden;margin:9px 0 6px}.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#ffb24b);border-radius:inherit}.progress.done i{background:var(--ok)}.bought{font-size:.86rem;color:var(--muted)}.actions{display:flex;gap:8px}.small{padding:9px 11px}.done-badge{color:var(--ok);font-weight:800}
+    dialog{border:0;border-radius:20px;padding:0;max-width:min(520px,calc(100% - 24px));width:100%;box-shadow:0 30px 80px #0005}dialog::backdrop{background:#17212baa;backdrop-filter:blur(4px)}.dialog-body{padding:22px}.dialog-body h2{margin-top:0}.dialog-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}.purchases{padding:0;margin:8px 0;list-style:none}.purchases li{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
+    .notice{padding:12px 14px;border-radius:12px;background:#fff0ca;color:#6e5112;margin:12px 0}.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#17212b;color:#fff;padding:12px 16px;border-radius:12px;opacity:0;transition:.2s;z-index:30;pointer-events:none}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.admin-only{outline:2px dashed #0f8b8d55;outline-offset:-2px}.footer{color:var(--muted);text-align:center;font-size:.82rem;padding-top:24px}
+    @media(max-width:620px){.shell{padding:16px 12px 80px}.summary{grid-template-columns:1fr}.item{grid-template-columns:1fr}.actions button{flex:1}.status{width:100%;margin:0}.hero h1{font-size:2.55rem}.category-head{align-items:flex-start}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section id="access" class="panel access">
+      <div class="eyebrow">Lista condivisa</div>
+      <h2>Entra nella spesa</h2>
+      <p>Inserisci il codice ricevuto nel gruppo.</p>
+      <form id="accessForm" class="stack">
+        <div class="field"><label for="code">Codice</label><input id="code" type="password" inputmode="numeric" autocomplete="one-time-code" required></div>
+        <button class="primary" type="submit">Continua</button>
+      </form>
+      <div id="setupBox" class="hidden notice">Questa è la prima apertura. Dopo l’accesso potrai creare la lista condivisa.</div>
+    </section>
+
+    <section id="app" class="hidden">
+      <header class="hero"><div class="eyebrow">20 agosto 2026 · lista temporanea</div><h1>Spesa per la spiaggia</h1><p>Segna soltanto quello che hai davvero comprato. Le quantità si aggiornano per tutti.</p></header>
+      <div id="firstRun" class="panel hidden"><h2>Crea la lista condivisa</h2><p>Verrà creata una lista temporanea su Firebase e riceverai il link da inviare agli amici e il link amministratore da conservare.</p><button id="createStore" class="primary">Crea e genera i link</button></div>
+      <div id="mainUi" class="hidden">
+        <div class="toolbar"><button id="share" class="primary">Condividi con gli amici</button><button id="adminLink" class="secondary hidden">Copia link amministratore</button><button id="addItem" class="ghost hidden">＋ Aggiungi prodotto</button><span id="sync" class="status">Sincronizzazione…</span></div>
+        <div class="summary"><div class="metric"><span>Prodotti in lista</span><strong id="totalItems">0</strong></div><div class="metric"><span>Completati</span><strong id="doneItems">0</strong></div><div class="metric"><span>Ancora da coprire</span><strong id="openItems">0</strong></div></div>
+        <div id="categories"></div>
+        <div class="footer">Il sito è pensato per essere rimosso dopo il 20 agosto 2026.</div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="buyDialog"><form id="buyForm" class="dialog-body"><h2 id="buyTitle">Segna acquisto</h2><input id="buyItemId" type="hidden"><div class="stack"><div class="field"><label for="person">Il tuo nome</label><input id="person" maxlength="40" required></div><div class="field"><label for="qty">Quantità comprata</label><input id="qty" type="number" min="0.1" step="0.1" required></div></div><ul id="purchaseList" class="purchases"></ul><div class="dialog-actions"><button type="button" class="ghost close-dialog">Annulla</button><button class="primary" type="submit">Salva</button></div></form></dialog>
+  <dialog id="editDialog"><form id="editForm" class="dialog-body"><h2>Modifica prodotto</h2><input id="editId" type="hidden"><div class="stack"><div class="field"><label for="editCategory">Categoria</label><input id="editCategory" required></div><div class="field"><label for="editName">Prodotto</label><input id="editName" required></div><div class="field"><label for="editMin">Quantità minima</label><input id="editMin" type="number" min="0" step="0.1" required></div><div class="field"><label for="editMax">Quantità ideale</label><input id="editMax" type="number" min="0" step="0.1" required></div><div class="field"><label for="editUnit">Unità / dettagli</label><input id="editUnit" required></div></div><div class="dialog-actions"><button type="button" class="ghost close-dialog">Annulla</button><button class="primary" type="submit">Salva senza perdere gli acquisti</button></div></form></dialog>
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const DATABASE = 'https://spesa-spiaggia-2026-default-rtdb.europe-west1.firebasedatabase.app';
+    const ACCESS_HASH = '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4';
+    const params = new URLSearchParams(location.search);
+    const requestedStore = params.get('store') ? decodeURIComponent(params.get('store')) : '';
+    const storeUrl = requestedStore.startsWith(DATABASE + '/liste/') && requestedStore.endsWith('.json') ? requestedStore : '';
+    const adminToken = location.hash.startsWith('#admin=') ? location.hash.slice(7) : '';
+    let state = null, isAdmin = false, poller = null;
+    const $ = s => document.querySelector(s);
+    const uid = () => crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36)+Math.random().toString(36).slice(2);
+    const initialItems = [
+      ['🍺 Bevande alcoliche','Birra',60,70,'bottiglie/lattine da 33 cl'],['🍺 Bevande alcoliche','Gin',3,3,'bottiglie da 70 cl'],['🍺 Bevande alcoliche','Vodka',2,2,'bottiglie da 70 cl'],['🍺 Bevande alcoliche','Amaro',2,2,'bottiglie da 70 cl'],['🍺 Bevande alcoliche','Tonica',8,10,'bottiglie/lattine da 1 L'],['🍺 Bevande alcoliche','Lemon soda',5,6,'bottiglie da 1,5 L'],['🍺 Bevande alcoliche','Red Bull / energy drink',24,30,'lattine · facoltativo'],
+      ['💧 Analcolici','Acqua naturale',35,40,'litri'],['💧 Analcolici','Acqua frizzante',10,15,'litri'],['💧 Analcolici','Coca-Cola',6,6,'bottiglie da 1,5 L'],['💧 Analcolici','Fanta / Aranciata',4,4,'bottiglie da 1,5 L'],['💧 Analcolici','Estathé / Lemonsoda ecc.',6,8,'litri'],['💧 Analcolici','Succhi',4,5,'litri'],
+      ['🥨 Stuzzichini comuni','Patatine',8,10,'buste'],['🥨 Stuzzichini comuni','Nachos',5,6,'buste'],['🥨 Stuzzichini comuni','Taralli',5,6,'confezioni'],['🥨 Stuzzichini comuni','Salatini',4,5,'confezioni'],['🥨 Stuzzichini comuni','Arachidi / mandorle',3,4,'confezioni'],
+      ['🧊 Importantissimo per la spiaggia','Ghiaccio',25,30,'kg'],['🧊 Importantissimo per la spiaggia','Borse frigo',4,5,'borse'],['🧊 Importantissimo per la spiaggia','Secchi / contenitori grandi',2,3,'per tenere le birre nel ghiaccio'],['🧊 Importantissimo per la spiaggia','Apribottiglie',1,1,'pezzo'],['🧊 Importantissimo per la spiaggia','Cavatappi',1,1,'pezzo'],['🧊 Importantissimo per la spiaggia','Sacchi della spazzatura',30,40,'sacchi'],
+      ['🍽️ Usa e getta','Bicchieri grandi',100,100,'bicchieri'],['🍽️ Usa e getta','Bicchierini piccoli',100,100,'bicchierini']
+    ].map((x,i)=>({id:'item-'+(i+1),category:x[0],name:x[1],min:x[2],max:x[3],unit:x[4],purchases:[]}));
+    async function hash(v){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+    function toast(msg){$('#toast').textContent=msg;$('#toast').classList.add('show');setTimeout(()=>$('#toast').classList.remove('show'),2400)}
+    function showApp(){sessionStorage.setItem('spesa-access','yes');$('#access').classList.add('hidden');$('#app').classList.remove('hidden');if(storeUrl) load();else $('#firstRun').classList.remove('hidden')}
+    $('#accessForm').addEventListener('submit',async e=>{e.preventDefault();if(await hash($('#code').value)!==ACCESS_HASH)return toast('Codice non corretto');showApp()});
+    if(sessionStorage.getItem('spesa-access')==='yes') showApp(); else if(!storeUrl) $('#setupBox').classList.remove('hidden');
+    async function createStore(){
+      const secret=uid()+uid(), adminHash=await hash(secret);
+      const doc={title:'Spesa per la spiaggia',expiresAt:'2026-08-20T23:59:59+02:00',adminHash,revision:1,updatedAt:new Date().toISOString(),items:initialItems};
+      $('#createStore').disabled=true;
+      try{const url=DATABASE+'/liste/'+uid().replaceAll('-','')+'.json';const r=await fetch(url,{method:'PUT',headers:{'Content-Type':'application/json','if-match':'null_etag'},body:JSON.stringify(doc)});if(!r.ok)throw Error('Firebase HTTP '+r.status);localStorage.setItem('spesa-new-admin',secret);location.href=location.pathname+'?store='+encodeURIComponent(url)+'#admin='+secret}catch(e){console.error(e);toast('Creazione non riuscita: '+e.message);$('#createStore').disabled=false}
+    }
+    $('#createStore').addEventListener('click',createStore);
+    async function load(silent=false){try{const r=await fetch(storeUrl+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error();const next=await r.json();state=next;isAdmin=adminToken&&await hash(adminToken)===state.adminHash;render();$('#sync').textContent='Aggiornato alle '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});if(!poller)poller=setInterval(()=>load(true),8000)}catch(e){if(!silent)toast('Impossibile caricare la lista');$('#sync').textContent='Connessione assente'}}
+    async function mutate(fn){
+      $('#sync').textContent='Salvataggio…';
+      try{
+        for(let attempt=0;attempt<5;attempt++){
+          const current=await fetch(storeUrl+'?t='+Date.now(),{cache:'no-store',headers:{'X-Firebase-ETag':'true'}});
+          if(!current.ok)throw Error('Lettura HTTP '+current.status);
+          const etag=current.headers.get('ETag');if(!etag)throw Error('ETag non disponibile');
+          const fresh=await current.json();fn(fresh);fresh.revision=(fresh.revision||0)+1;fresh.updatedAt=new Date().toISOString();
+          const r=await fetch(storeUrl,{method:'PUT',headers:{'Content-Type':'application/json','if-match':etag},body:JSON.stringify(fresh)});
+          if(r.status===412)continue;
+          if(!r.ok)throw Error('Scrittura HTTP '+r.status);
+          state=fresh;render();$('#sync').textContent='Salvato';return true;
+        }
+        throw Error('Troppi aggiornamenti simultanei');
+      }catch(e){console.error(e);toast('Salvataggio non riuscito: '+e.message);$('#sync').textContent='Errore di sincronizzazione';return false}
+    }
+    function bought(item){return (item.purchases||[]).reduce((n,p)=>n+Number(p.qty),0)}
+    function esc(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+    function render(){
+      if(!state)return;$('#firstRun').classList.add('hidden');$('#mainUi').classList.remove('hidden');$('#adminLink').classList.toggle('hidden',!isAdmin);$('#addItem').classList.toggle('hidden',!isAdmin);
+      const groups={};state.items.forEach(i=>(groups[i.category]??=[]).push(i));let done=0;
+      $('#categories').innerHTML=Object.entries(groups).map(([cat,items])=>`<section class="category"><div class="category-head"><h2>${esc(cat)}</h2><span>${items.length} prodotti</span></div><div class="items">${items.map(item=>{const n=bought(item),pct=Math.min(100,item.min?100*n/item.min:0),ok=n>=item.min;done+=ok?1:0;return `<article class="item ${isAdmin?'admin-only':''}"><div><h3>${esc(item.name)}</h3><div class="target">Obiettivo: ${item.min===item.max?item.min:item.min+'–'+item.max} ${esc(item.unit)}</div><div class="progress ${ok?'done':''}"><i style="width:${pct}%"></i></div><div class="bought">${ok?'<span class="done-badge">✓ Coperto</span> · ':''}${n} acquistati${item.purchases?.length?' da '+item.purchases.map(p=>esc(p.person)).join(', '):''}</div></div><div class="actions"><button class="primary small buy" data-id="${item.id}">＋ Segna</button>${isAdmin?`<button class="ghost small edit" data-id="${item.id}">Modifica</button>`:''}</div></article>`}).join('')}</div></section>`).join('');
+      $('#totalItems').textContent=state.items.length;$('#doneItems').textContent=done;$('#openItems').textContent=state.items.length-done;
+      document.querySelectorAll('.buy').forEach(b=>b.onclick=()=>openBuy(b.dataset.id));document.querySelectorAll('.edit').forEach(b=>b.onclick=()=>openEdit(b.dataset.id));
+    }
+    function openBuy(id){const item=state.items.find(i=>i.id===id);$('#buyItemId').value=id;$('#buyTitle').textContent='Segna: '+item.name;$('#person').value=localStorage.getItem('spesa-name')||'';$('#qty').value='';$('#purchaseList').innerHTML=(item.purchases||[]).map(p=>`<li><span>${esc(p.person)}: <strong>${p.qty}</strong></span>${isAdmin?`<button type="button" class="danger small remove-purchase" data-pid="${p.id}">Rimuovi</button>`:''}</li>`).join('');$('#buyDialog').showModal();document.querySelectorAll('.remove-purchase').forEach(b=>b.onclick=async()=>{if(await mutate(s=>{const i=s.items.find(x=>x.id===id);i.purchases=i.purchases.filter(p=>p.id!==b.dataset.pid)}))openBuy(id)})}
+    $('#buyForm').addEventListener('submit',async e=>{e.preventDefault();const id=$('#buyItemId').value,person=$('#person').value.trim(),qty=Number($('#qty').value),purchase={id:uid(),person,qty,at:new Date().toISOString()};if(!person||qty<=0)return;localStorage.setItem('spesa-name',person);if(await mutate(s=>s.items.find(i=>i.id===id).purchases.push(purchase))){$('#buyDialog').close();toast('Acquisto segnato')}});
+    function openEdit(id){const i=id?state.items.find(x=>x.id===id):{id:'',category:'',name:'',min:1,max:1,unit:'pezzi'};$('#editId').value=i.id;$('#editCategory').value=i.category;$('#editName').value=i.name;$('#editMin').value=i.min;$('#editMax').value=i.max;$('#editUnit').value=i.unit;$('#editDialog').showModal()}
+    $('#editForm').addEventListener('submit',async e=>{e.preventDefault();const id=$('#editId').value,data={category:$('#editCategory').value.trim(),name:$('#editName').value.trim(),min:Number($('#editMin').value),max:Number($('#editMax').value),unit:$('#editUnit').value.trim()};if(data.max<data.min)return toast('La quantità ideale deve essere almeno quella minima');if(await mutate(s=>{if(id)Object.assign(s.items.find(i=>i.id===id),data);else s.items.push({id:uid(),...data,purchases:[]})})){$('#editDialog').close();toast(id?'Prodotto aggiornato':'Prodotto aggiunto')}});
+    $('#addItem').onclick=()=>openEdit('');document.querySelectorAll('.close-dialog').forEach(b=>b.onclick=()=>b.closest('dialog').close());
+    const friendUrl=()=>location.origin+location.pathname+'?store='+encodeURIComponent(storeUrl);
+    async function copy(text,msg){try{await navigator.clipboard.writeText(text);toast(msg)}catch{prompt('Copia questo link:',text)}}
+    $('#share').onclick=async()=>{const u=friendUrl();if(navigator.share)try{await navigator.share({title:'Spesa per la spiaggia',text:'Codice di accesso: 1234',url:u})}catch{}else copy(u,'Link copiato')};
+    $('#adminLink').onclick=()=>copy(friendUrl()+'#admin='+adminToken,'Link amministratore copiato');
+  </script>
+</body>
+</html>
